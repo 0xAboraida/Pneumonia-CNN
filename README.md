@@ -1,40 +1,40 @@
-# 🫁 PneumoNet — Pneumonia Detection from Chest X-rays
+# PneumoNet: Pneumonia Detection from Chest X-rays
 
-A deep learning project that classifies chest X-ray images as **NORMAL** or **PNEUMONIA** using a Convolutional Neural Network (CNN). Built with TensorFlow/Keras and deployed via FastAPI.
+A deep learning project that classifies chest X-ray images as **NORMAL** or **PNEUMONIA** using a custom Convolutional Neural Network (CNN). The project is built with TensorFlow/Keras and features both a REST API deployed via FastAPI and an interactive web interface using Streamlit.
 
-## 📊 Model Performance
+## Model Performance
 
 | Metric | Train | Test |
 |--------|-------|------|
 | Accuracy | 98.29% | 95.90% |
 | Loss | 0.0537 | 0.1025 |
 
-## 🏗️ Project Structure
+![Training vs Validation](assets/training_vs_validation.png)
 
-```
+## Project Structure
+
+```text
 PneumoNet/
+├── assets/                       # Images and architecture diagrams
+├── data/                         # Datasets (not tracked by Git)
+│   ├── raw/                      # Raw Chest X-ray images
+│   └── processed/                # Split, resized, and balanced data
+├── models/                       # Pre-trained models (.keras, .h5)
+├── notebooks/                    # Jupyter notebooks for experiments
 ├── src/                          # Source code package
-│   ├── __init__.py               # Package init
 │   ├── config.py                 # Centralized configuration
 │   ├── data_loader.py            # Data pipeline (split, resize, load, balance)
 │   ├── model.py                  # CNN architecture (PneumoNet)
 │   ├── train.py                  # Training pipeline
 │   ├── evaluate.py               # Evaluation & visualization
 │   └── inference.py              # Single-image prediction
-├── app.py                        # FastAPI web deployment
+├── app.py                        # FastAPI web backend
+├── streamlit_app.py              # Streamlit interactive web interface
 ├── requirements.txt              # Python dependencies
-├── README.md                     # This file
-├── PneumoNet_Final.keras         # Pre-trained model (~29 MB)
-├── PneumoNet_Final_Best.weights.h5
-├── history/                      # Training history
-│   └── PneumoNet_Final_History.json
-├── Chest_X-ray_Dataset/          # Raw data (NORMAL / PNEUMONIA)
-├── Chest_X-ray_Split/            # Train/Val/Test split
-├── Chest_X-ray_Split_Resized/    # Resized to 150x150
-└── chest_X-ray_balanced/         # Balanced training set
+└── README.md                     # Project documentation
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Setup Environment
 
@@ -52,13 +52,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run the API
+### 2. Run the Applications
 
+**Run the FastAPI Backend:**
 ```bash
 uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
-
 Then open **http://localhost:8000/docs** for the interactive Swagger UI.
+
+**Run the Streamlit Interface:**
+```bash
+streamlit run streamlit_app.py
+```
+This will open a web browser where you can easily upload images and test the model interactively.
 
 ### 3. Make a Prediction (CLI)
 
@@ -72,12 +78,16 @@ python -m src.inference path/to/chest_xray.jpg
 python -m src.train
 ```
 
-## 🏛️ Architecture
+## Architecture
+
+![Model Architecture](assets/PneumoNet_Architecture_Colored.png)
+
+![Detailed Model Architecture](assets/PneumoNet_Architecture.png)
 
 The PneumoNet CNN follows this architecture:
 
-```
-Input (150×150×1)
+```text
+Input (150×150×1 Grayscale)
   → [Conv2D(32) → BatchNorm → Conv2D(32) → BatchNorm → MaxPool → Dropout(0.25)]
   → [Conv2D(64) → BatchNorm → Conv2D(64) → BatchNorm → MaxPool → Dropout(0.25)]
   → [Conv2D(128) → BatchNorm → Conv2D(128) → BatchNorm → MaxPool → Dropout(0.25)]
@@ -85,7 +95,15 @@ Input (150×150×1)
   → Dense(1, Sigmoid)
 ```
 
-## 📡 API Endpoints
+## Sample Predictions
+
+### Correctly Classified
+![Correctly Classified](assets/correctly_classified_images.png)
+
+### Misclassified
+![Misclassified](assets/misclassified_images.png)
+
+## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -94,7 +112,7 @@ Input (150×150×1)
 | `POST` | `/predict` | Upload X-ray image for prediction |
 | `GET` | `/docs` | Swagger UI documentation |
 
-### Example Response
+**Example Response (`/predict`):**
 
 ```json
 {
@@ -105,17 +123,17 @@ Input (150×150×1)
 }
 ```
 
-## 🧩 Module Overview
+## Module Overview
 
-| Module | Class | Description |
-|--------|-------|-------------|
-| `config.py` | `PathConfig`, `ImageConfig`, `DataConfig`, `TrainingConfig` | All configuration |
-| `data_loader.py` | `DataSplitter`, `ImageResizer`, `ImageLoader`, `DataBalancer`, `ImageCounter` | Data pipeline |
-| `model.py` | `PneumoNet` | CNN architecture |
-| `train.py` | `Trainer` | Training pipeline |
-| `evaluate.py` | `Evaluator`, `HistoryPlotter` | Evaluation & visualization |
-| `inference.py` | `Predictor` | Single-image prediction |
+| Module | Description |
+|--------|-------------|
+| `config.py` | Centralized configurations for paths, images, and training |
+| `data_loader.py` | Data splitting, resizing, loading, and balancing pipelines |
+| `model.py` | CNN architecture definition |
+| `train.py` | Model training and history logging |
+| `evaluate.py` | Model evaluation and result visualization |
+| `inference.py` | Prediction logic for new images |
 
-## 📝 License
+## License
 
 This project is for educational purposes.
