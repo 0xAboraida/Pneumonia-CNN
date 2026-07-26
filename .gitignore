@@ -1,0 +1,12 @@
+# Datasets
+data/
+
+# Model Files (Optional, remove if you want to push models. Models >100MB cannot be pushed to standard GitHub)
+models/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Training history
+history/
